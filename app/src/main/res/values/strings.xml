@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Crocodile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="game_rules_fragment_text_array">
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tempus, nulla porta ultrices tempus, neque lorem tincidunt nisi, eu posuere mi sapien a elit. Quisque imperdiet, ante quis ornare viverra, nisi nisl vestibulum sem, id malesuada lectus tortor consequat neque. Nam et dapibus felis. Praesent sed egestas ipsum. In in nibh eleifend, malesuada massa a, vulputate mauris. Ut dignissim eleifend feugiat. Nulla est ligula, dapibus ac interdum vitae, tempus a augue. Proin congue consequat turpis et consectetur. Vestibulum consequat sodales sapien, non lobortis felis tempor nec. Cras feugiat, turpis eget tincidunt bibendum, dolor lectus consectetur arcu, in gravida nunc urna eu risus. Sed quis quam placerat, auctor ipsum ultrices, porta quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam mollis urna ac ante ultrices pretium.</item>
+        <item>Ut quis felis suscipit, laoreet mauris eu, rutrum neque. Fusce a tellus tortor. In eu lacinia nisi. Proin fringilla mattis mauris ac vulputate. Integer eget finibus est. Suspendisse iaculis faucibus ultrices. Sed ultricies commodo odio sit amet convallis. Etiam vitae suscipit ligula, non dapibus est. Donec pellentesque efficitur massa, at aliquam neque ornare et. Ut imperdiet libero nisl, vitae volutpat metus scelerisque sit amet. Ut elit risus, egestas a urna tempor, maximus mollis neque. Vestibulum condimentum in nibh vitae ultrices. Aliquam at feugiat mauris, commodo convallis nunc. Proin sodales erat ut odio dignissim, sit amet pellentesque eros sodales.</item>
+        <item>In tincidunt diam tellus. Praesent suscipit nunc ut mattis fringilla. Vivamus eu felis eget tortor laoreet feugiat eget non nunc. Quisque ultricies porta lorem nec placerat. Maecenas lorem nulla, dapibus tincidunt malesuada ac, ultricies quis lectus. Aliquam erat volutpat. Praesent rhoncus, eros non vehicula imperdiet, neque lacus hendrerit risus, vitae pulvinar mi risus non eros. Nam luctus augue at nisl venenatis condimentum. Proin eget mollis dolor. Sed nec scelerisque justo. Nulla vitae egestas justo.</item>
+    </string-array>
+
+
+    <string-array name="game_theme_names_array">
+        <item>Game Theme 1</item>
+        <item>Game Theme 2</item>
+        <item>Game Theme 3</item>
+        <item>Game Theme 4</item>
+        <item>Game Theme 5</item>
+        <item>Game Theme 6</item>
+    </string-array>
+    <string-array name="game_theme_descriptions_array">
+        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</item>
+        <item>Phasellus tempus, nulla porta ultrices tempus, neque lorem tincidunt nisi, eu posuere mi sapien a elit. Quisque imperdiet, ante quis ornare viverra, nisi nisl vestibulum sem, id malesuada lectus tortor consequat neque. Nam et dapibus felis.</item>
+        <item>Ut dignissim eleifend feugiat. Nulla est ligula, dapibus ac interdum vitae, tempus a augue.</item>
+        <item>In tincidunt diam tellus.</item>
+        <item>Praesent suscipit nunc ut mattis fringilla.</item>
+        <item>Vivamus eu felis eget tortor laoreet feugiat eget non nunc.</item>
+    </string-array>
+
+
+    <string name="title_activity_game_settings">GameSettingsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!--
+    This string is used for square devices and overridden by hello_world in
+    values-round/strings.xml for round devices.
+    -->
+    <string name="hello_world">Hello Square World!</string>
+    <string name="main_menu">Main menu</string>
+</resources>

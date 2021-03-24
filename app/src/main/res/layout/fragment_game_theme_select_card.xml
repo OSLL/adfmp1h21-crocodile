@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="4dp"
+        app:cardCornerRadius="6dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".GameThemeSelectCardFragment"
+            android:background="#9C27B0">
+
+        <ImageView
+                android:layout_width="0dp"
+                android:layout_height="137dp"
+                tools:src="@tools:sample/avatars"
+                android:id="@+id/game_theme_card_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="TODO"
+                app:srcCompat="@drawable/cat_placeholder"
+                android:background="#FF5722"
+                android:scaleType="centerCrop" />
+
+        <TextView
+                android:text="Theme Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/game_theme_card_name"
+                app:layout_constraintTop_toBottomOf="@+id/game_theme_card_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+                android:text="Some description\nPossibly multiline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/game_theme_card_description"
+                app:layout_constraintTop_toBottomOf="@+id/game_theme_card_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
