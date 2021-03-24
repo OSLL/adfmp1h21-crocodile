@@ -19,6 +19,11 @@ class MidTurnActivity : AppCompatActivity() {
     private lateinit var startTurnButton: Button
     private lateinit var stopGameButton: Button
     private lateinit var recyclerView: RecyclerView
+    private lateinit var turnTextView: TextView
+    private lateinit var nextTeamTextView: TextView
+    private lateinit var headerTextView: TextView
+
+    private var gameEnded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +31,25 @@ class MidTurnActivity : AppCompatActivity() {
         startTurnButton = findViewById(R.id.mid_turn_start_turn_button)
         stopGameButton = findViewById(R.id.mid_turn_stop_game_button)
         recyclerView = findViewById(R.id.mid_turn_recycler_view)
+        turnTextView = findViewById(R.id.mid_turn_turn_number)
+        nextTeamTextView = findViewById(R.id.mid_turn_next_team)
+        headerTextView = findViewById(R.id.mid_game_header)
         startTurnButton.setOnClickListener {
-            startActivity(Intent(this, TurnActivity::class.java))
+            startActivityForResult(Intent(this, TurnActivity::class.java), 1)
         }
         stopGameButton.setOnClickListener {
-            possiblyStopGame()
+            if (!gameEnded) {
+                possiblyStopGame()
+            } else {
+                val intent = Intent(this, MainMenuActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                startActivity(intent)
+                finish()
+            }
         }
+        updateFromState()
         recyclerView.adapter = MyRecyclerViewAdapter()
+        turnTextView.text = "Turn: ${ApplicationState.state!!.turn}"
     }
 
     private fun possiblyStopGame() {
@@ -42,6 +59,37 @@ class MidTurnActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         possiblyStopGame()
+    }
+
+    private fun updateFromState() {
+        val state = ApplicationState.state!!
+        state.scores = state.scores.sortedByDescending { it.score }
+        state.teamForCurrentTurn -= 1
+        if (state.teamForCurrentTurn < 0) {
+            state.turn -= 1
+            if (state.turn == 0) {
+                setGameEndedState()
+            }
+            state.teamForCurrentTurn = state.scores.size - 1
+        }
+        turnTextView.text = state.turn.toString()
+        nextTeamTextView.text = ApplicationState.config!!.teams[state.teamForCurrentTurn].name
+    }
+
+    private fun setGameEndedState() {
+        gameEnded = true
+        startTurnButton.visibility = Button.INVISIBLE
+        startTurnButton.isEnabled = false
+        nextTeamTextView.visibility = TextView.INVISIBLE
+        turnTextView.visibility = TextView.INVISIBLE
+        headerTextView.text = "Final Scores"
+        stopGameButton.text = "Return to Main Menu"
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        updateFromState()
+        recyclerView.adapter?.notifyDataSetChanged()
     }
 
     class GameCloseConfirmationDialogFragment: DialogFragment() {
@@ -84,13 +132,16 @@ class MidTurnActivity : AppCompatActivity() {
             return ViewHolder(view)
         }
 
-        override fun getItemCount(): Int = 2
+        override fun getItemCount(): Int = ApplicationState.state!!.scores.size
 
         @SuppressLint("RestrictedApi")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            // holder.nameTextView.text = names[position]
-            // holder.descriptionTextView.text = descriptions[position]
-            if (position == 0) {
+            val maxPoints = ApplicationConfig.TURNS_COUNT * ApplicationConfig.WORDS_COUNT
+            val (team, score) = ApplicationState.state!!.scores[position]
+            holder.imageView.setBackgroundColor(team.color.toArgb())
+            holder.nameTextView.text = team.name
+            holder.scoreTextView.text = "$score/$maxPoints"
+            if ((position == 0 || position != 0 && ApplicationState.state!!.scores[position - 1].score == score) && score != 0) {
                 holder.crownImageView.visibility = ImageView.VISIBLE
             }
         }

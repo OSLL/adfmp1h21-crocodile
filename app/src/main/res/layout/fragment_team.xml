@@ -36,7 +36,6 @@
                         android:layout_height="match_parent"
                         tools:src="@tools:sample/avatars"
                         android:id="@+id/team_fragment_color"
-                        app:srcCompat="@color/design_default_color_error"
                         android:minHeight="64dp"
                         android:minWidth="64dp"
                         app:layout_constraintTop_toTopOf="parent"
