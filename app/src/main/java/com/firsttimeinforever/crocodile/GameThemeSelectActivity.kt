@@ -11,33 +11,34 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.firsttimeinforever.crocodile.model.GameConfig
 import com.google.android.material.internal.ContextUtils.getActivity
 
 
 class GameThemeSelectActivity : AppCompatActivity() {
-    private lateinit var nextButton: Button
     private lateinit var backButton: Button
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_theme_select)
-        nextButton = findViewById(R.id.game_theme_select_next_button)
         backButton = findViewById(R.id.game_theme_select_back_button)
         recyclerView = findViewById(R.id.game_theme_select_recycler_view)
-
-        nextButton.setOnClickListener {
-            startActivity(Intent(this, GameSettingsActivity::class.java))
-        }
         backButton.setOnClickListener {
             finish()
         }
         recyclerView.adapter = MyRecyclerViewAdapter()
     }
 
-    private class MyRecyclerViewAdapter: RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
-        class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    private fun startNextActivity() {
+        val intent = Intent(this, GameSettingsActivity::class.java)
+        startActivity(intent)
+    }
+
+    private inner class MyRecyclerViewAdapter: RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
+        inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             val imageView: ImageView = itemView.findViewById(R.id.game_theme_card_image)
             val nameTextView: TextView = itemView.findViewById(R.id.game_theme_card_name)
             val descriptionTextView: TextView = itemView.findViewById(R.id.game_theme_card_description)
@@ -61,7 +62,12 @@ class GameThemeSelectActivity : AppCompatActivity() {
             holder.nameTextView.text = names[position]
             holder.descriptionTextView.text = descriptions[position]
             holder.itemView.setOnClickListener {
-                Toast.makeText(getActivity(holder.itemView.context), "Item $position is clicked.", Toast.LENGTH_SHORT).show()
+                if (ApplicationState.config == null) {
+                    ApplicationState.config = GameConfig(theme = position)
+                } else {
+                    ApplicationState.config = ApplicationState.config!!.copy(theme = position)
+                }
+                startNextActivity()
             }
         }
     }

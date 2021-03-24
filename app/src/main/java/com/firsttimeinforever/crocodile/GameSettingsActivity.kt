@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.firsttimeinforever.crocodile.Utility.formatSeconds
+import com.firsttimeinforever.crocodile.model.GameState
+import com.firsttimeinforever.crocodile.model.Teams
 import com.google.android.material.internal.ContextUtils.getActivity
+import kotlin.time.nanoseconds
 
 class GameSettingsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -29,23 +32,28 @@ class GameSettingsActivity : AppCompatActivity() {
         backButton = findViewById(R.id.game_settings_back_button)
         turnTimeSeekbar = findViewById(R.id.game_setting_turn_time_seekbar)
         turnTimeTextView = findViewById(R.id.game_settings_turn_time)
+        with(ApplicationState.config!!) {
+            teams.clear()
+            teams.add(Teams.PREDEFINED[0])
+            teams.add(Teams.PREDEFINED[1])
+        }
         val recyclerViewAdapter = MyRecyclerViewAdapter(recyclerView)
         recyclerView.adapter = recyclerViewAdapter
         addTeamButton.setOnClickListener {
             recyclerViewAdapter.addTeam()
         }
         startGameButton.setOnClickListener {
+            ApplicationState.state = GameState.from(ApplicationState.config!!.teams)
             startActivity(Intent(this, MidTurnActivity::class.java))
         }
         backButton.setOnClickListener {
             finish()
         }
         turnTimeSeekbar.progress = 40
-        formatSeconds(turnTimeSeekbar.progress, appendUnits = true)
-        turnTimeTextView.text = formatSeconds(turnTimeSeekbar.progress)
+        updateTurnTime(turnTimeSeekbar.progress)
         turnTimeSeekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekbar: SeekBar?, position: Int, fromUser: Boolean) {
-                turnTimeTextView.text = formatSeconds(position, appendUnits = true)
+                updateTurnTime(position)
             }
 
             override fun onStartTrackingTouch(seekbar: SeekBar?) = Unit
@@ -53,12 +61,16 @@ class GameSettingsActivity : AppCompatActivity() {
         })
     }
 
-    private class MyRecyclerViewAdapter(val recyclerView: RecyclerView): RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
-        private var itemsCountHolder = 2
+    private fun updateTurnTime(value: Int) {
+        ApplicationState.config = ApplicationState.config!!.copy(time = value)
+        turnTimeTextView.text = formatSeconds(value)
+    }
 
+    private class MyRecyclerViewAdapter(val recyclerView: RecyclerView): RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
         @SuppressLint("RestrictedApi")
         fun addTeam() {
-            if (itemsCountHolder == ApplicationConfig.MAX_TEAMS_COUNT) {
+            val count = ApplicationState.config!!.teams.size
+            if (count == ApplicationConfig.MAX_TEAMS_COUNT) {
                 Toast.makeText(
                     getActivity(recyclerView.context),
                     "Maximum ${ApplicationConfig.MAX_TEAMS_COUNT} of teams can be declared!",
@@ -66,7 +78,9 @@ class GameSettingsActivity : AppCompatActivity() {
                 ).show()
                 return
             }
-            itemsCountHolder += 1
+            val next = Teams.PREDEFINED.find { it !in ApplicationState.config!!.teams }
+            requireNotNull(next)
+            ApplicationState.config!!.teams.add(next)
             notifyDataSetChanged()
         }
 
@@ -79,10 +93,12 @@ class GameSettingsActivity : AppCompatActivity() {
             return ViewHolder(view)
         }
 
-        override fun getItemCount(): Int = itemsCountHolder
+        override fun getItemCount(): Int = ApplicationState.config!!.teams.size
 
         @SuppressLint("RestrictedApi")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.colorImageView.setBackgroundColor(ApplicationState.config!!.teams[position].color.toArgb())
+            holder.teamNameTextView.text = ApplicationState.config!!.teams[position].name
             holder.itemView.setOnClickListener {
                 Toast.makeText(getActivity(holder.itemView.context), "Item $position is clicked.", Toast.LENGTH_SHORT).show()
             }
@@ -96,12 +112,13 @@ class GameSettingsActivity : AppCompatActivity() {
 
             init {
                 removeButton.setOnClickListener {
-                    if (itemsCountHolder == 2) {
+                    val count = ApplicationState.config!!.teams.size
+                    if (count == 2) {
                         Toast.makeText(getActivity(itemView.context), "At least two teams should be declared!", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
-                    itemsCountHolder -= 1
-                    recyclerView.removeViewAt(layoutPosition)
+                    ApplicationState.config!!.teams.removeAt(layoutPosition)
+                    notifyDataSetChanged()
                 }
             }
         }

@@ -11,20 +11,23 @@
 
 
     <string-array name="game_theme_names_array">
-        <item>Game Theme 1</item>
-        <item>Game Theme 2</item>
-        <item>Game Theme 3</item>
-        <item>Game Theme 4</item>
-        <item>Game Theme 5</item>
-        <item>Game Theme 6</item>
+        <item>Culture</item>
+        <item>Engineering</item>
+        <item>Research</item>
+        <item>Animals</item>
     </string-array>
     <string-array name="game_theme_descriptions_array">
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</item>
-        <item>Phasellus tempus, nulla porta ultrices tempus, neque lorem tincidunt nisi, eu posuere mi sapien a elit. Quisque imperdiet, ante quis ornare viverra, nisi nisl vestibulum sem, id malesuada lectus tortor consequat neque. Nam et dapibus felis.</item>
-        <item>Ut dignissim eleifend feugiat. Nulla est ligula, dapibus ac interdum vitae, tempus a augue.</item>
-        <item>In tincidunt diam tellus.</item>
-        <item>Praesent suscipit nunc ut mattis fringilla.</item>
-        <item>Vivamus eu felis eget tortor laoreet feugiat eget non nunc.</item>
+        <item>Words relate to culture.</item>
+        <item>If you are an engineer you\'ll love it!</item>
+        <item>Words related to research and science processes.</item>
+        <item>Words related to animals (HARD).</item>
+    </string-array>
+
+    <string-array name="theme_words">
+        <item>society,civilization,philosophy,anthropology,subculture,acculturation,religion,cultivation,nationalism,counterculture,cultural,ideology,art,popular culture,folklore,agriculture,country,writing,music,monoculture,cyberculture,language,social class,high culture,cultural studies,cultural anthropology,cooking,literature,science,growth,tillage,grow,ritual,perfection,development,metaphor,concept,symbol,mythology,gender</item>
+        <item>technologist,engineering,plan,design,mechanical engineer,electrical engineer,mastermind,surveyor,programmer,technician,architect,latin,scientist,civil engineer,software engineer,direct,organize,orchestrate,railroad engineer,engine driver,applied scientist,locomotive engineer,metallurgist,technology,designer,mechanic,planner,aeronautical engineer,computer programmer,chemist,contractor,officer,inventor,instructor,physicist,geologist,consultant,entrepreneur,electrician,mathematician,machinist,worker,carpenter,salesman,administrator,accountant,millwright,quantity surveyor,organise,professional engineer,mathematics,ingenuity,research,soul,someone,somebody,person,manipulator,mortal,individual,watt,watson,trevithick,sperry,siemens,shannon,roebling</item>
+        <item>experiment,science,investigate,investigation,probe,look into,inquiry,knowledge,explore,search,empirical research,scientific,enquiry,study,survey,biology,theory,epistemology,scientific research,process,google,marketing research,business,research project,curiosity,consult,prospect,engineering,institute,researcher,biomedical,laboratory,experimental,nature,development,technology,analysis,lab,biotechnology,scientists,neuroscience,interdisciplinary,medicine,experiments,research and development,historical method,graduate student,null hypothesis,theorem,documentation,discovery,fact,interpretation,poll,experimentation,microscopy,investigating,canvass,refer,heraldry,humanities,artistic,economic,studies,corporation,exploration,exploratory,investigative,researchers,observation</item>
+        <item>mammal,vertebrate,chordate,fish,beast,omnivore,herbivore,creature,invertebrate,organism,heterotroph,adult,eukaryotic,carnivore,multicellular,critter,pet,human,protist,wildlife,porifera,bird,tame,domesticate,jellyfish,placozoa,predator,birds,embryo,mammals,reptile,bone,insects,body,insect,poikilotherm,zooplankton,metazoan,animalia,biped,insectivore,varmint,multicellular organism,darter,fauna,fleshly</item>
     </string-array>
 
 
