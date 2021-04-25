@@ -124,7 +124,7 @@ class GameSettingsActivity : AppCompatActivity() {
         inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             val colorImageView: ImageView = itemView.findViewById(R.id.team_fragment_color)
             val teamNameTextView: TextView = itemView.findViewById(R.id.team_fragment_name)
-            val removeButton: Button = itemView.findViewById(R.id.team_fragment_remove_button)
+            val removeButton: ImageButton = itemView.findViewById(R.id.team_fragment_remove_button)
 
             init {
                 removeButton.setOnClickListener {
