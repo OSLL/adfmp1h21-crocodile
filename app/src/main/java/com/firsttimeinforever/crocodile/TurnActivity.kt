@@ -76,7 +76,7 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
         turnWordsGuessed.text = "Guessed: $wordsGuessed/${ApplicationConfig.WORDS_COUNT}"
         turnWordsLeft.text = "Words left: 0/${ApplicationConfig.WORDS_COUNT}"
         turnTeamName.text = state.config.teams[state.game.teamForCurrentTurn].name
-        startTimer(10)
+        startTimer(state.config.time)
     }
 
     private fun wordGuessed() {

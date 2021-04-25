@@ -63,13 +63,9 @@ class GameThemeSelectActivity : AppCompatActivity() {
             val descriptions = holder.itemView.resources.getStringArray(R.array.game_theme_descriptions_array)
             holder.nameTextView.text = names[position]
             holder.descriptionTextView.text = descriptions[position]
+            holder.imageView.setImageResource(holder.itemView.resources.obtainTypedArray(R.array.game_theme_images_array).getResourceId(position, 0))
             holder.itemView.setOnClickListener {
                 state = state.copy(config = state.config.copy(theme = position))
-                // if (ApplicationState.config == null) {
-                //     ApplicationState.config = GameConfig(theme = position)
-                // } else {
-                //     ApplicationState.config = ApplicationState.config!!.copy(theme = position)
-                // }
                 startNextActivity()
             }
         }

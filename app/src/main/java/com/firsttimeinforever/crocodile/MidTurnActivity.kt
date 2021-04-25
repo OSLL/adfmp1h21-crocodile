@@ -82,7 +82,7 @@ class MidTurnActivity : AppCompatActivity() {
             }
             state.game.teamForCurrentTurn = state.game.scores.size - 1
         }
-        turnTextView.text = state.game.turn.toString()
+        turnTextView.text = "Turn: ${state.game.turn}"
         nextTeamTextView.text = state.config.teams[state.game.teamForCurrentTurn].name
     }
 
