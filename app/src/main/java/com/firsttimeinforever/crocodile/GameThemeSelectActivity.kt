@@ -9,17 +9,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.firsttimeinforever.crocodile.model.GameConfig
-import com.google.android.material.internal.ContextUtils.getActivity
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 class GameThemeSelectActivity : AppCompatActivity() {
     private lateinit var backButton: Button
     private lateinit var recyclerView: RecyclerView
+
+    private var state = ApplicationState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class GameThemeSelectActivity : AppCompatActivity() {
 
     private fun startNextActivity() {
         val intent = Intent(this, GameSettingsActivity::class.java)
+        intent.putExtra("state", Json.encodeToString(state))
         startActivity(intent)
     }
 
@@ -62,11 +64,12 @@ class GameThemeSelectActivity : AppCompatActivity() {
             holder.nameTextView.text = names[position]
             holder.descriptionTextView.text = descriptions[position]
             holder.itemView.setOnClickListener {
-                if (ApplicationState.config == null) {
-                    ApplicationState.config = GameConfig(theme = position)
-                } else {
-                    ApplicationState.config = ApplicationState.config!!.copy(theme = position)
-                }
+                state = state.copy(config = state.config.copy(theme = position))
+                // if (ApplicationState.config == null) {
+                //     ApplicationState.config = GameConfig(theme = position)
+                // } else {
+                //     ApplicationState.config = ApplicationState.config!!.copy(theme = position)
+                // }
                 startNextActivity()
             }
         }

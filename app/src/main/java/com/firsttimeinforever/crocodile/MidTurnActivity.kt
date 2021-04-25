@@ -1,6 +1,7 @@
 package com.firsttimeinforever.crocodile
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
@@ -14,6 +15,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class MidTurnActivity : AppCompatActivity() {
     private lateinit var startTurnButton: Button
@@ -25,6 +29,8 @@ class MidTurnActivity : AppCompatActivity() {
 
     private var gameEnded = false
 
+    private lateinit var state: ApplicationState
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mid_turn)
@@ -34,8 +40,13 @@ class MidTurnActivity : AppCompatActivity() {
         turnTextView = findViewById(R.id.mid_turn_turn_number)
         nextTeamTextView = findViewById(R.id.mid_turn_next_team)
         headerTextView = findViewById(R.id.mid_game_header)
+
+        state = Json.decodeFromString(intent.getStringExtra("state"))
+
         startTurnButton.setOnClickListener {
-            startActivityForResult(Intent(this, TurnActivity::class.java), 1)
+            val intent = Intent(this, TurnActivity::class.java)
+            intent.putExtra("state", Json.encodeToString(state))
+            startActivityForResult(intent, 1)
         }
         stopGameButton.setOnClickListener {
             if (!gameEnded) {
@@ -49,7 +60,7 @@ class MidTurnActivity : AppCompatActivity() {
         }
         updateFromState()
         recyclerView.adapter = MyRecyclerViewAdapter()
-        turnTextView.text = "Turn: ${ApplicationState.state!!.turn}"
+        turnTextView.text = "Turn: ${state.game.turn}"
     }
 
     private fun possiblyStopGame() {
@@ -62,18 +73,17 @@ class MidTurnActivity : AppCompatActivity() {
     }
 
     private fun updateFromState() {
-        val state = ApplicationState.state!!
-        state.scores = state.scores.sortedByDescending { it.score }
-        state.teamForCurrentTurn -= 1
-        if (state.teamForCurrentTurn < 0) {
-            state.turn -= 1
-            if (state.turn == 0) {
+        state.game.scores = state.game.scores.sortedByDescending { it.score }
+        state.game.teamForCurrentTurn -= 1
+        if (state.game.teamForCurrentTurn < 0) {
+            state.game.turn -= 1
+            if (state.game.turn == 0) {
                 setGameEndedState()
             }
-            state.teamForCurrentTurn = state.scores.size - 1
+            state.game.teamForCurrentTurn = state.game.scores.size - 1
         }
-        turnTextView.text = state.turn.toString()
-        nextTeamTextView.text = ApplicationState.config!!.teams[state.teamForCurrentTurn].name
+        turnTextView.text = state.game.turn.toString()
+        nextTeamTextView.text = state.config.teams[state.game.teamForCurrentTurn].name
     }
 
     private fun setGameEndedState() {
@@ -88,6 +98,10 @@ class MidTurnActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode != 1 || resultCode != Activity.RESULT_OK) {
+            return
+        }
+        state = Json.decodeFromString(data!!.getStringExtra("state"))
         updateFromState()
         recyclerView.adapter?.notifyDataSetChanged()
     }
@@ -115,8 +129,8 @@ class MidTurnActivity : AppCompatActivity() {
         }
     }
 
-    private class MyRecyclerViewAdapter: RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
-        class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    private inner class MyRecyclerViewAdapter: RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
+        inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
             val imageView: ImageView = itemView.findViewById(R.id.team_score_fragment_color)
             val nameTextView: TextView = itemView.findViewById(R.id.team_score_fragment_name)
             val scoreTextView: TextView = itemView.findViewById(R.id.team_score_fragment_score)
@@ -132,16 +146,16 @@ class MidTurnActivity : AppCompatActivity() {
             return ViewHolder(view)
         }
 
-        override fun getItemCount(): Int = ApplicationState.state!!.scores.size
+        override fun getItemCount(): Int = state.game.scores.size
 
         @SuppressLint("RestrictedApi")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val maxPoints = ApplicationConfig.TURNS_COUNT * ApplicationConfig.WORDS_COUNT
-            val (team, score) = ApplicationState.state!!.scores[position]
+            val (team, score) = state.game.scores[position]
             holder.imageView.setBackgroundColor(team.color.toArgb())
             holder.nameTextView.text = team.name
             holder.scoreTextView.text = "$score/$maxPoints"
-            if ((position == 0 || position != 0 && ApplicationState.state!!.scores[position - 1].score == score) && score != 0) {
+            if ((position == 0 || position != 0 && state.game.scores[position - 1].score == score) && score != 0) {
                 holder.crownImageView.visibility = ImageView.VISIBLE
             }
         }

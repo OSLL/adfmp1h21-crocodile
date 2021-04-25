@@ -1,8 +1,12 @@
 package com.firsttimeinforever.crocodile.model
 
 import android.graphics.Color
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class Team(
-    val color: Color,
-    val name: String
+    @Serializable(with = ColorSerializer::class)
+    val color: Color = Color.valueOf(Color.BLACK),
+    val name: String = ""
 )

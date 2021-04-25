@@ -13,7 +13,9 @@ import com.firsttimeinforever.crocodile.Utility.formatSeconds
 import com.firsttimeinforever.crocodile.model.GameState
 import com.firsttimeinforever.crocodile.model.Teams
 import com.google.android.material.internal.ContextUtils.getActivity
-import kotlin.time.nanoseconds
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class GameSettingsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -22,6 +24,8 @@ class GameSettingsActivity : AppCompatActivity() {
     private lateinit var backButton: Button
     private lateinit var turnTimeSeekbar: SeekBar
     private lateinit var turnTimeTextView: TextView
+
+    private lateinit var state: ApplicationState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +36,28 @@ class GameSettingsActivity : AppCompatActivity() {
         backButton = findViewById(R.id.game_settings_back_button)
         turnTimeSeekbar = findViewById(R.id.game_setting_turn_time_seekbar)
         turnTimeTextView = findViewById(R.id.game_settings_turn_time)
-        with(ApplicationState.config!!) {
-            teams.clear()
-            teams.add(Teams.PREDEFINED[0])
-            teams.add(Teams.PREDEFINED[1])
-        }
+        // with(ApplicationState.config!!) {
+        //     teams.clear()
+        //     teams.add(Teams.PREDEFINED[0])
+        //     teams.add(Teams.PREDEFINED[1])
+        // }
+
+        state = Json.decodeFromString(intent.getStringExtra("state"))
+        state.config.teams.clear()
+        state.config.teams.add(Teams.PREDEFINED[0])
+        state.config.teams.add(Teams.PREDEFINED[1])
+
         val recyclerViewAdapter = MyRecyclerViewAdapter(recyclerView)
         recyclerView.adapter = recyclerViewAdapter
         addTeamButton.setOnClickListener {
             recyclerViewAdapter.addTeam()
         }
         startGameButton.setOnClickListener {
-            ApplicationState.state = GameState.from(ApplicationState.config!!.teams)
-            startActivity(Intent(this, MidTurnActivity::class.java))
+            state = state.copy(game = GameState.from(state.config.teams))
+            // ApplicationState.state = GameState.from(ApplicationState.config!!.teams)
+            val intent = Intent(this, MidTurnActivity::class.java)
+            intent.putExtra("state", Json.encodeToString(state))
+            startActivity(intent)
         }
         backButton.setOnClickListener {
             finish()
@@ -62,14 +75,16 @@ class GameSettingsActivity : AppCompatActivity() {
     }
 
     private fun updateTurnTime(value: Int) {
-        ApplicationState.config = ApplicationState.config!!.copy(time = value)
+        state = state.copy(config = state.config.copy(time = value))
+        // ApplicationState.config = ApplicationState.config!!.copy(time = value)
         turnTimeTextView.text = formatSeconds(value)
     }
 
-    private class MyRecyclerViewAdapter(val recyclerView: RecyclerView): RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
+    private inner class MyRecyclerViewAdapter(val recyclerView: RecyclerView): RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>() {
         @SuppressLint("RestrictedApi")
         fun addTeam() {
-            val count = ApplicationState.config!!.teams.size
+            // val count = ApplicationState.config!!.teams.size
+            val count = state.config.teams.size
             if (count == ApplicationConfig.MAX_TEAMS_COUNT) {
                 Toast.makeText(
                     getActivity(recyclerView.context),
@@ -78,9 +93,10 @@ class GameSettingsActivity : AppCompatActivity() {
                 ).show()
                 return
             }
-            val next = Teams.PREDEFINED.find { it !in ApplicationState.config!!.teams }
+            val next = Teams.PREDEFINED.find { it !in state.config.teams }
             requireNotNull(next)
-            ApplicationState.config!!.teams.add(next)
+            // ApplicationState.config!!.teams.add(next)
+            state.config.teams.add(next)
             notifyDataSetChanged()
         }
 
@@ -93,12 +109,12 @@ class GameSettingsActivity : AppCompatActivity() {
             return ViewHolder(view)
         }
 
-        override fun getItemCount(): Int = ApplicationState.config!!.teams.size
+        override fun getItemCount(): Int = state.config.teams.size
 
         @SuppressLint("RestrictedApi")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.colorImageView.setBackgroundColor(ApplicationState.config!!.teams[position].color.toArgb())
-            holder.teamNameTextView.text = ApplicationState.config!!.teams[position].name
+            holder.colorImageView.setBackgroundColor(state.config.teams[position].color.toArgb())
+            holder.teamNameTextView.text = state.config.teams[position].name
             holder.itemView.setOnClickListener {
                 Toast.makeText(getActivity(holder.itemView.context), "Item $position is clicked.", Toast.LENGTH_SHORT).show()
             }
@@ -112,12 +128,12 @@ class GameSettingsActivity : AppCompatActivity() {
 
             init {
                 removeButton.setOnClickListener {
-                    val count = ApplicationState.config!!.teams.size
+                    val count = state.config.teams.size
                     if (count == 2) {
                         Toast.makeText(getActivity(itemView.context), "At least two teams should be declared!", Toast.LENGTH_SHORT).show()
                         return@setOnClickListener
                     }
-                    ApplicationState.config!!.teams.removeAt(layoutPosition)
+                    state.config.teams.removeAt(layoutPosition)
                     notifyDataSetChanged()
                 }
             }
