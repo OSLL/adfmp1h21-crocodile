@@ -17,7 +17,6 @@ class MainMenuActivity : AppCompatActivity() {
         startGameButton = findViewById(R.id.new_game_button)
 
         startGameButton.setOnClickListener {
-            ApplicationState.clear()
             startActivity(Intent(this, GameThemeSelectActivity::class.java))
         }
         gameRulesButton.setOnClickListener {

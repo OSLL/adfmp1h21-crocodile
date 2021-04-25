@@ -1,9 +1,11 @@
 package com.firsttimeinforever.crocodile.model
 
 import com.firsttimeinforever.crocodile.ApplicationConfig
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GameState(
-    var scores: List<TeamScoreEntry>,
+    var scores: List<TeamScoreEntry> = emptyList(),
     var turn: Int = ApplicationConfig.TURNS_COUNT,
     var teamForCurrentTurn: Int = scores.size
 ) {
@@ -13,8 +15,9 @@ data class GameState(
         }
     }
 
+    @Serializable
     data class TeamScoreEntry(
-        val team: Team,
+        val team: Team = Team(),
         var score: Int = 0
     )
 }

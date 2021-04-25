@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,7 +16,13 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
+import com.firsttimeinforever.crocodile.model.GameConfig
+import com.firsttimeinforever.crocodile.model.GameState
 import com.yuyakaido.android.cardstackview.*
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import java.util.*
 
 class TurnActivity : AppCompatActivity(), CardStackListener {
@@ -27,8 +34,12 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
     private lateinit var turnWordsLeft: TextView
     private lateinit var turnWordsGuessed: TextView
 
-    private val timer = Timer()
+    private lateinit var timer: Timer
+    private var secondsLeft = 0
+    private var timerIsRunning = false
     private lateinit var words: List<String>
+
+    private lateinit var state: ApplicationState
 
     private var wordsLeft = ApplicationConfig.WORDS_COUNT
     private var wordsGuessed = 0
@@ -43,6 +54,9 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
         turnWordsLeft = findViewById(R.id.turn_words_left)
         turnWordsGuessed = findViewById(R.id.turn_words_guessed)
         turnTeamName = findViewById(R.id.turn_team)
+
+        state = Json.decodeFromString(intent.getStringExtra("state"))
+
         words = getWords()
         layoutManager = CardStackLayoutManager(this, this).apply {
             setSwipeableMethod(SwipeableMethod.AutomaticAndManual)
@@ -61,20 +75,20 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
         }
         turnWordsGuessed.text = "Guessed: $wordsGuessed/${ApplicationConfig.WORDS_COUNT}"
         turnWordsLeft.text = "Words left: 0/${ApplicationConfig.WORDS_COUNT}"
-        turnTeamName.text = ApplicationState.config!!.teams[ApplicationState.state!!.teamForCurrentTurn].name
+        turnTeamName.text = state.config.teams[state.game.teamForCurrentTurn].name
         startTimer(10)
     }
 
     private fun wordGuessed() {
-        val team = ApplicationState.config!!.teams[ApplicationState.state!!.teamForCurrentTurn]
-        ApplicationState.state!!.scores.first { it.team == team }.score += 1
+        val team = state.config.teams[state.game.teamForCurrentTurn]
+        state.game.scores.first { it.team == team }.score += 1
         wordsGuessed += 1
         turnWordsGuessed.text = "Guessed: $wordsGuessed/${ApplicationConfig.WORDS_COUNT}"
     }
 
     @ExperimentalStdlibApi
     private fun getWords(): List<String> {
-        val words = resources.getStringArray(R.array.theme_words)[ApplicationState.config!!.theme].split(',')
+        val words = resources.getStringArray(R.array.theme_words)[state.config.theme].split(',')
         return buildList {
             repeat(ApplicationConfig.WORDS_COUNT) {
                 add(words.random())
@@ -82,13 +96,31 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (timerIsRunning) {
+            timer.cancel()
+        }
+        timerIsRunning = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!timerIsRunning) {
+            startTimer(secondsLeft)
+        }
+    }
+
     private fun startTimer(seconds: Int) {
+        timerIsRunning = true
         turnTimer.text = Utility.formatSeconds(seconds)
-        var secondsLeft = seconds
+        secondsLeft = seconds
+        timer = Timer()
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (secondsLeft == 0) {
                     timer.cancel()
+                    timerIsRunning = false
                     runOnUiThread {
                         try {
                             stopTurn()
@@ -108,27 +140,30 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
     }
 
     private fun stopTurn(timeEnd: Boolean = true) {
-        val dialog = TurnEndedDialogFragment(timeEnd)
+        val dialog = TurnEndedDialogFragment(state, timeEnd)
         dialog.show(supportFragmentManager, null)
     }
 
     private fun possiblyStopTurn() {
-        val dialog = TurnCloseConfirmationDialogFragment()
+        val dialog = TurnCloseConfirmationDialogFragment(state)
         dialog.show(supportFragmentManager, null)
         timer.cancel()
+        timerIsRunning = false
     }
 
     override fun onBackPressed() {
         possiblyStopTurn()
     }
 
-    class TurnCloseConfirmationDialogFragment: DialogFragment() {
+    class TurnCloseConfirmationDialogFragment(private val state: ApplicationState = ApplicationState()): DialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             return activity?.let {
                 return with(AlertDialog.Builder(it)) {
                     setMessage("Dou you really want to stop current turn?")
                     setPositiveButton("Yes") { _, _ ->
-                        it.setResult(Activity.RESULT_OK, null)
+                        val result = Intent()
+                        result.putExtra("state", Json.encodeToString(state))
+                        it.setResult(Activity.RESULT_OK, result)
                         it.finish()
                     }
                     setNegativeButton("No") { dialog, _ ->
@@ -141,17 +176,19 @@ class TurnActivity : AppCompatActivity(), CardStackListener {
         }
     }
 
-    class TurnEndedDialogFragment(private val timeEnd: Boolean = true): DialogFragment() {
+    class TurnEndedDialogFragment(private val state: ApplicationState = ApplicationState(), private val timeEnd: Boolean = true): DialogFragment() {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             return activity?.let {
                 return with(AlertDialog.Builder(it)) {
-                    if (timeEnd) {
-                        setMessage("No more time!")
-                    } else {
-                        setMessage("Turn ended!")
+                    when {
+                        timeEnd -> setMessage("No more time!")
+                        else -> setMessage("Turn ended!")
                     }
                     setPositiveButton("Ok") { _, _ ->
-                        it.setResult(Activity.RESULT_OK, null)
+                        val result = Intent()
+                        result.putExtra("state", Json.encodeToString(state))
+                        it.setResult(Activity.RESULT_OK, result)
+                        it.setResult(Activity.RESULT_OK, result)
                         it.finish()
                     }
                     setCancelable(false)

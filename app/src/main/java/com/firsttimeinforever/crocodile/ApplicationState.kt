@@ -2,13 +2,11 @@ package com.firsttimeinforever.crocodile
 
 import com.firsttimeinforever.crocodile.model.GameConfig
 import com.firsttimeinforever.crocodile.model.GameState
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
-internal object ApplicationState {
-    var config: GameConfig? = null
-    var state: GameState? = null
-
-    fun clear() {
-        config = null
-        state = null
-    }
-}
+@Serializable
+data class ApplicationState(
+    var config: GameConfig = GameConfig(),
+    var game: GameState = GameState()
+)
