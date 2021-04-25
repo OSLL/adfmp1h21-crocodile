@@ -87,7 +87,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="24sp"
             app:layout_constraintBottom_toTopOf="@+id/game_setting_turn_time_seekbar"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginBottom="8dp" />
 
     <Button
             android:text="Back to Game Theme"
@@ -127,6 +127,6 @@
             android:minHeight="6dp"
             android:maxHeight="6dp"
             app:layout_constraintBottom_toTopOf="@+id/game_settings_start_game_button"
-            android:layout_marginBottom="64dp" />
+            android:layout_marginBottom="16dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

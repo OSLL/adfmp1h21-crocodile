@@ -32,8 +32,8 @@
                     android:layout_height="match_parent">
 
                 <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
                         tools:src="@tools:sample/avatars"
                         android:id="@+id/team_fragment_color"
                         android:minHeight="64dp"
@@ -53,25 +53,26 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/team_fragment_name"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="8dp"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toStartOf="@+id/team_fragment_remove_button"
                 app:layout_constraintStart_toEndOf="@+id/cardView3"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:layout_marginStart="8dp" />
 
-        <Button
-                android:text="Remove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+        <ImageButton
+                android:layout_width="27dp"
+                android:layout_height="28dp"
                 android:id="@+id/team_fragment_remove_button"
-                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:background="#00FFFFFF" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
