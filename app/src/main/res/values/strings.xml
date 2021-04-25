@@ -4,9 +4,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="game_rules_fragment_text_array">
-        <item>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus tempus, nulla porta ultrices tempus, neque lorem tincidunt nisi, eu posuere mi sapien a elit. Quisque imperdiet, ante quis ornare viverra, nisi nisl vestibulum sem, id malesuada lectus tortor consequat neque. Nam et dapibus felis. Praesent sed egestas ipsum. In in nibh eleifend, malesuada massa a, vulputate mauris. Ut dignissim eleifend feugiat. Nulla est ligula, dapibus ac interdum vitae, tempus a augue. Proin congue consequat turpis et consectetur. Vestibulum consequat sodales sapien, non lobortis felis tempor nec. Cras feugiat, turpis eget tincidunt bibendum, dolor lectus consectetur arcu, in gravida nunc urna eu risus. Sed quis quam placerat, auctor ipsum ultrices, porta quam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nam mollis urna ac ante ultrices pretium.</item>
-        <item>Ut quis felis suscipit, laoreet mauris eu, rutrum neque. Fusce a tellus tortor. In eu lacinia nisi. Proin fringilla mattis mauris ac vulputate. Integer eget finibus est. Suspendisse iaculis faucibus ultrices. Sed ultricies commodo odio sit amet convallis. Etiam vitae suscipit ligula, non dapibus est. Donec pellentesque efficitur massa, at aliquam neque ornare et. Ut imperdiet libero nisl, vitae volutpat metus scelerisque sit amet. Ut elit risus, egestas a urna tempor, maximus mollis neque. Vestibulum condimentum in nibh vitae ultrices. Aliquam at feugiat mauris, commodo convallis nunc. Proin sodales erat ut odio dignissim, sit amet pellentesque eros sodales.</item>
-        <item>In tincidunt diam tellus. Praesent suscipit nunc ut mattis fringilla. Vivamus eu felis eget tortor laoreet feugiat eget non nunc. Quisque ultricies porta lorem nec placerat. Maecenas lorem nulla, dapibus tincidunt malesuada ac, ultricies quis lectus. Aliquam erat volutpat. Praesent rhoncus, eros non vehicula imperdiet, neque lacus hendrerit risus, vitae pulvinar mi risus non eros. Nam luctus augue at nisl venenatis condimentum. Proin eget mollis dolor. Sed nec scelerisque justo. Nulla vitae egestas justo.</item>
+        <item>Choose game theme and add your teams.</item>
+        <item>Start game. Before the start of each turn pass the device to the person from the corresponding team.</item>
+        <item>To confirm that the word was correctly guessed, swipe right the word card. Swipe left if you feel that you can\'t guess the word.</item>
     </string-array>
 
 
@@ -22,6 +22,12 @@
         <item>Words related to research and science processes.</item>
         <item>Words related to animals (HARD).</item>
     </string-array>
+    <integer-array name="game_theme_images_array">
+        <item>@drawable/culture</item>
+        <item>@drawable/engineering</item>
+        <item>@drawable/research</item>
+        <item>@drawable/cat_placeholder</item>
+    </integer-array>
 
     <string-array name="theme_words">
         <item>society,civilization,philosophy,anthropology,subculture,acculturation,religion,cultivation,nationalism,counterculture,cultural,ideology,art,popular culture,folklore,agriculture,country,writing,music,monoculture,cyberculture,language,social class,high culture,cultural studies,cultural anthropology,cooking,literature,science,growth,tillage,grow,ritual,perfection,development,metaphor,concept,symbol,mythology,gender</item>
