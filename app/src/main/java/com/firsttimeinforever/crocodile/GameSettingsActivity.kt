@@ -98,6 +98,7 @@ class GameSettingsActivity : AppCompatActivity() {
             // ApplicationState.config!!.teams.add(next)
             state.config.teams.add(next)
             notifyDataSetChanged()
+            Toast.makeText(getActivity(recyclerView.context), "${next.name} added!", Toast.LENGTH_SHORT).show()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
